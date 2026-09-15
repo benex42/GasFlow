@@ -1,0 +1,227 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  --font-display: "DM Sans", "Avenir Next", sans-serif;
+  --color-ink: #121b2b;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-width: 0;
+  overflow-x: hidden;
+  font-family: "DM Sans", sans-serif;
+  background: #fbfcfd;
+  color: #121b2b;
+}
+
+#root {
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+
+/* The dashboard uses compact operational UI; lift its small labels one step for comfortable reading on every screen. */
+[class*="text-[8px]"] { font-size: 9px !important; }
+[class*="text-[9px]"] { font-size: 10px !important; }
+[class*="text-[10px]"] { font-size: 11px !important; }
+[class*="text-[11px]"] { font-size: 12px !important; }
+[class*="text-[12px]"] { font-size: 13px !important; }
+[class*="text-[13px]"] { font-size: 14px !important; }
+[class*="text-[14px]"] { font-size: 15px !important; }
+
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+@media (max-width: 640px) {
+  /* Prevent iOS from zooming the page when a compact form input is focused. */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+:root {
+  --brand-navy: #168d5b;
+  --brand-navy-dark: #117d4f;
+  --brand-navy-soft: #edf7f1;
+  --brand-navy-border: #c9e4d4;
+}
+
+/* Match the reference palette: GasFlow green for actions on clean navy and off-white surfaces. */
+.bg-\[\#15925d\] { background-color: var(--brand-navy) !important; }
+.bg-\[\#117d4f\] { background-color: var(--brand-navy-dark) !important; }
+.text-\[\#15925d\],
+.text-\[\#117d4f\] { color: var(--brand-navy) !important; }
+.border-\[\#15925d\],
+.focus\:border-\[\#15925d\]:focus { border-color: var(--brand-navy) !important; }
+.hover\:bg-\[\#117d4f\]:hover { background-color: var(--brand-navy-dark) !important; }
+.hover\:text-\[\#117d4f\]:hover { color: var(--brand-navy) !important; }
+.bg-\[\#effaf4\],
+.bg-\[\#e8f6ee\],
+.bg-\[\#eaf8f0\],
+.bg-\[\#f3faf6\] { background-color: var(--brand-navy-soft) !important; }
+.border-\[\#cde4d7\],
+.border-\[\#dce9e2\] { border-color: var(--brand-navy-border) !important; }
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+.mono {
+  font-family: "DM Mono", ui-monospace, monospace;
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sidebar-enter {
+  from { opacity: 0; transform: translateX(-14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes splash-enter {
+  from { opacity: 0; transform: translateY(10px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes splash-progress {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.splash-content {
+  animation: splash-enter 420ms ease-out both;
+}
+
+.splash-mark {
+  animation: splash-enter 520ms 90ms ease-out both;
+}
+
+.splash-progress {
+  animation: splash-progress 1.15s cubic-bezier(.3, .7, .3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-content,
+  .splash-mark,
+  .splash-progress {
+    animation: none;
+  }
+}
+
+.page-transition {
+  animation: page-enter 220ms ease-out both;
+}
+
+.dashboard-dark {
+  color: #e8e9eb;
+}
+
+.dashboard-dark header {
+  border-color: #2b2d31;
+  background: rgba(16, 17, 20, 0.92);
+}
+
+.dashboard-dark .bg-white,
+.dashboard-dark .bg-\[\#f8fafb\] {
+  background-color: #1a1b1f !important;
+}
+
+.dashboard-dark .bg-\[\#111e2f\],
+.dashboard-dark .bg-\[\#1d2d40\] {
+  background-color: #141518 !important;
+}
+
+.dashboard-dark .bg-\[\#effaf4\],
+.dashboard-dark .bg-\[\#e8f6ee\],
+.dashboard-dark .bg-\[\#eaf8f0\],
+.dashboard-dark .bg-\[\#f3faf6\] {
+  background-color: #23252a !important;
+}
+
+.dashboard-dark .bg-\[\#f5fbf7\],
+.dashboard-dark .bg-\[\#f7fcf9\],
+.dashboard-dark .bg-\[\#f8faf9\],
+.dashboard-dark .bg-\[\#f9fcfa\] {
+  background-color: #1d1f23 !important;
+}
+
+.dashboard-dark .bg-\[\#edf1f6\] {
+  background-color: #28354c !important;
+}
+
+.dashboard-dark .text-\[\#26354b\] {
+  color: #cfddf3 !important;
+}
+
+.dashboard-dark .bg-\[\#fff7e8\] {
+  background-color: #3b3020 !important;
+}
+
+.dashboard-dark .text-\[\#bd7a12\] {
+  color: #f0bb53 !important;
+}
+
+.dashboard-dark .border-\[\#e5eaed\],
+.dashboard-dark .border-\[\#e7ecef\],
+.dashboard-dark .border-\[\#edf0f2\],
+.dashboard-dark .border-\[\#f0f2f4\],
+.dashboard-dark .border-\[\#dbe3e7\],
+.dashboard-dark .border-\[\#cde4d7\],
+.dashboard-dark .border-\[\#dce9e2\],
+.dashboard-dark .border-\[\#e8eeeb\],
+.dashboard-dark .border-\[\#e9eeeb\],
+.dashboard-dark .border-\[\#bce6cf\],
+.dashboard-dark .border-\[\#bcdcc9\],
+.dashboard-dark .border-\[\#b8d8c5\],
+.dashboard-dark .border-\[\#e1e7e9\],
+.dashboard-dark .border-\[\#e1eee6\] {
+  border-color: #32343a !important;
+}
+
+.dashboard-dark .divide-\[\#f0f2f4\] > :not(:last-child),
+.dashboard-dark .divide-\[\#edf0f2\] > :not(:last-child) {
+  border-color: #32343a !important;
+}
+
+.dashboard-dark .text-\[\#172132\],
+.dashboard-dark .text-\[\#344052\] {
+  color: #edf5f1 !important;
+}
+
+.dashboard-dark .text-\[\#718093\],
+.dashboard-dark .text-\[\#617084\],
+.dashboard-dark .text-\[\#778496\] {
+  color: #b9bbc2 !important;
+}
+
+.dashboard-dark .overflow-x-auto {
+  scrollbar-color: #4a4d54 #1a1b1f;
+}
+
+.dashboard-dark .overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.dashboard-dark .overflow-x-auto::-webkit-scrollbar-track {
+  background: #1a1b1f;
+}
+
+.dashboard-dark .overflow-x-auto::-webkit-scrollbar-thumb {
+  border: 2px solid #1a1b1f;
+  border-radius: 999px;
+  background: #4a4d54;
+}
