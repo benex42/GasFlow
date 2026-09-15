@@ -11,39 +11,30 @@ npm install
 npm run dev
 ```
 
-The frontend runs at `http://localhost:5173` and proxies `/api` requests to the API at `http://localhost:4000`. Use `npm run server` or `npm run dev:client` individually only when you specifically need one service. User accounts are stored locally in `gasflow.db` (which is ignored by Git).
+The frontend runs at `http://localhost:5173` and proxies `/api` requests to the API at `http://localhost:4000`. Use `npm run server` or `npm run dev:client` individually only when you specifically need one service. The API uses the Neon Postgres connection supplied as `DATABASE_URL`.
 
 ## Environment
 
-Copy `.env.example` to `.env` before deployment and replace `JWT_SECRET` with a long random secret. In production, also set `CLIENT_ORIGIN` to the deployed web-app origin and `VITE_API_URL` to the API base URL when the frontend and API use separate origins.
+Copy `.env.example` to `.env`, add your Neon `DATABASE_URL`, and replace `JWT_SECRET` with a long random secret. In production, set `CLIENT_ORIGIN` to the deployed web-app origin.
 
-## Production deployment
+## Production deployment: Vercel + Neon
 
-Vercel hosts the Vite frontend, but it does not run the local Vite development proxy. Deploy the Express API as a separate web service with persistent storage, then configure the frontend to call it directly.
+The frontend and API deploy together on Vercel. The API is the `api/[...path].js` Vercel Function and uses Neon Postgres for persistent data. The frontend continues to call `/api`, so `VITE_API_URL` is not needed.
 
-### 1. Deploy the API on Render
+1. Create a free Neon project and copy its connection string from **Connect**.
+2. In **Vercel → Project → Settings → Environment Variables**, add:
 
-This repository includes `render.yaml`. In Render, create a **Blueprint** from this repository. It provisions the Node API and a persistent disk at `/var/data`, where SQLite is stored. Render prompts for `CLIENT_ORIGIN`; enter the exact Vercel production URL, for example `https://gasflow.vercel.app`. `JWT_SECRET` is generated automatically by the blueprint.
+   ```env
+   DATABASE_URL=postgresql://...
+   JWT_SECRET=<a long random value>
+   CLIENT_ORIGIN=https://your-app.vercel.app
+   NODE_ENV=production
+   ```
 
-After it is live, open `https://YOUR-RENDER-SERVICE.onrender.com/api/health`. It must return:
+   Remove any previous `VITE_API_URL` variable, or set it to `/api`, so the frontend calls the API function on the same Vercel deployment.
 
-```json
-{ "status": "ok", "service": "gasflow-api" }
-```
-
-### 2. Configure and redeploy the Vercel frontend
-
-In **Vercel → Project → Settings → Environment Variables**, add this for the Production environment:
-
-```env
-VITE_API_URL=https://YOUR-RENDER-SERVICE.onrender.com/api
-```
-
-Do not add a trailing slash. Redeploy the Vercel project after saving it: Vite injects `VITE_API_URL` during the build.
-
-### 3. Validate signup
-
-Open the Vercel app and create an account. If there is a deployment problem, the app now distinguishes an API 404 from an API 500 and describes the relevant setting to check.
+3. Redeploy Vercel. The API automatically creates its schema at first request.
+4. Visit `https://your-app.vercel.app/api/health`; it should return `{"status":"ok","service":"gasflow-api","database":"postgres"}`.
 
 `CLIENT_ORIGIN` may contain comma-separated exact origins if you also use a custom domain or Vercel preview URL.
 

@@ -54,7 +54,7 @@ export async function api(path, options = {}) {
     }
     if (response.status >= 500) {
       throw new Error(
-        `GasFlow API returned HTTP ${response.status}. Check the backend deployment logs and its JWT_SECRET and DB_PATH settings.`
+        `GasFlow API returned HTTP ${response.status}. Check the backend deployment logs and its JWT_SECRET and DATABASE_URL settings.`
       );
     }
     throw new Error(`GasFlow API returned HTTP ${response.status}.`);
