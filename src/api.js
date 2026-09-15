@@ -36,8 +36,29 @@ export async function api(path, options = {}) {
   } catch {
     throw new Error("Cannot reach the GasFlow API. Restart the app with npm run dev and try again.");
   }
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || "The request could not be completed.");
+  const body = await response.text();
+  let data = {};
+  try {
+    data = body ? JSON.parse(body) : {};
+  } catch {
+    // A hosting platform's 404/500 page is HTML, not API JSON. Give the
+    // operator a useful deployment error instead of hiding that distinction.
+  }
+
+  if (!response.ok) {
+    if (data.error) throw new Error(data.error);
+    if (response.status === 404) {
+      throw new Error(
+        "GasFlow API endpoint was not found. Set VITE_API_URL to your backend URL ending in /api, then redeploy the frontend."
+      );
+    }
+    if (response.status >= 500) {
+      throw new Error(
+        `GasFlow API returned HTTP ${response.status}. Check the backend deployment logs and its JWT_SECRET and DB_PATH settings.`
+      );
+    }
+    throw new Error(`GasFlow API returned HTTP ${response.status}.`);
+  }
   return data;
 }
 

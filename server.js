@@ -153,7 +153,21 @@ migrateDatabase();
 
 const app = express();
 app.disable("x-powered-by");
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://localhost:5173" }));
+const clientOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim().replace(/\/$/, ""))
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Requests without an Origin header include health checks and command-line
+      // diagnostics. Browser requests must use one of the configured origins.
+      if (!origin || clientOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error(`Origin ${origin} is not allowed by CLIENT_ORIGIN.`));
+    },
+  })
+);
 app.use(express.json({ limit: "16kb" }));
 
 const loginAttempts = new Map();
@@ -260,7 +274,7 @@ function validateCredentials({ name, email, password }, needsName) {
   return { name: cleanName, email: cleanEmail, password };
 }
 
-app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
+app.get("/api/health", (_req, res) => res.json({ status: "ok", service: "gasflow-api" }));
 
 app.post("/api/auth/register", async (req, res, next) => {
   try {
