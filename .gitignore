@@ -8,3 +8,5 @@ src/.env.resend
 gasflow.db
 gasflow.db-shm
 gasflow.db-wal
+.vercel
+.env*
