@@ -33,10 +33,10 @@ import TodaySummaryPage from "./pages/TodaySummaryPage";
 
 const primaryItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "record-sale", label: "Record Sale (POS)", icon: PlusCircle },
-  { id: "today", label: "Today's Summary", icon: CalendarDays },
+  { id: "record-sale", label: "Record Sale (POS)", mobileLabel: "Record sale", icon: PlusCircle },
+  { id: "today", label: "Today's Summary", mobileLabel: "Today", icon: CalendarDays },
   { id: "analytics", label: "Monthly Analytics", icon: BarChart3 },
-  { id: "debts", label: "Customer Debts / Credit", icon: CircleDollarSign },
+  { id: "debts", label: "Customer Debts / Credit", mobileLabel: "Debts", icon: CircleDollarSign },
 ];
 
 const utilityItems = [
@@ -132,6 +132,25 @@ function NavItem({ item, active, onSelect, compact = false, collapsed = false })
         className={`shrink-0 transition-colors duration-200 ${!compact && selected ? "text-[#c8a63a]" : ""}`}
       />
       <span className={collapsed ? "sr-only" : ""}>{item.label}</span>
+    </button>
+  );
+}
+
+function MobileNavItem({ item, active, onSelect }) {
+  const Icon = item.icon;
+  const selected = active === item.id;
+
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(item.id)}
+      aria-current={selected ? "page" : undefined}
+      className={`group flex h-[58px] min-w-0 flex-col items-center justify-center gap-1 rounded-2xl px-2 text-[10px] font-bold transition-all duration-200 ${selected ? "bg-[#edf7f1] text-[#117d4f] shadow-[0_4px_12px_rgba(21,146,93,.09)]" : "text-[#718093] active:scale-95"}`}
+    >
+      <span className={`grid h-7 w-7 place-items-center rounded-xl transition ${selected ? "bg-[#15925d] text-white shadow-[0_4px_9px_rgba(21,146,93,.22)]" : "text-[#718093] group-hover:bg-[#f1f5f3] group-hover:text-[#117d4f]"}`}>
+        <Icon size={17} strokeWidth={selected ? 2.6 : 2.15} />
+      </span>
+      <span className="max-w-full truncate leading-none">{item.mobileLabel || item.label}</span>
     </button>
   );
 }
@@ -1030,7 +1049,7 @@ function DashboardLayout({ onLogout, onProfileUpdated, user }) {
         </div>
       )}
 
-      <div className={`flex h-[100dvh] flex-col overflow-hidden pb-[calc(5rem+env(safe-area-inset-bottom))] transition-[padding] duration-300 ease-out lg:pb-0 ${sidebarCollapsed ? "lg:pl-[72px]" : "lg:pl-[224px]"}`}>
+      <div className={`flex h-[100dvh] flex-col overflow-hidden pb-[calc(5.6rem+env(safe-area-inset-bottom))] transition-[padding] duration-300 ease-out lg:pb-0 ${sidebarCollapsed ? "lg:pl-[72px]" : "lg:pl-[224px]"}`}>
         <header className="z-20 flex h-[68px] shrink-0 items-center justify-between border-b border-[#e5eaed] bg-[#f7f9fa]/90 px-4 backdrop-blur sm:px-7">
           <div className="flex items-center gap-3">
             <span className="text-[18px] font-extrabold tracking-[-.06em] text-[#172132]">
@@ -1263,20 +1282,19 @@ function DashboardLayout({ onLogout, onProfileUpdated, user }) {
       )}
       <nav
         aria-label="Quick navigation"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-[#dfe6e8] bg-white/95 px-2 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.55rem,env(safe-area-inset-bottom))] lg:hidden"
       >
-        <div className="mx-auto grid max-w-md grid-cols-3">
+        <div className="mx-auto grid max-w-md grid-cols-3 gap-1 rounded-[22px] border border-[#dfe8e4] bg-white/95 p-1.5 shadow-[0_10px_28px_rgba(23,33,50,.14)] backdrop-blur-xl">
           {primaryItems
             .filter((item) =>
               ["record-sale", "today", "debts"].includes(item.id),
             )
             .map((item) => (
-              <NavItem
+              <MobileNavItem
                 key={item.id}
                 item={item}
                 active={active}
                 onSelect={selectPage}
-                compact
               />
             ))}
         </div>
